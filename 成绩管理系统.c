@@ -1,55 +1,53 @@
 #include<stdio.h>
 #include<string.h>
 #include<math.h>
-#include "malloc.h"
 #include <stdlib.h>
 
-#define   MAX_LEN  10                	   /* ×Ö·û´®×î´ó³¤¶È */
-#define   STU_NUM 30                       /* ×î¶àµÄÑ§ÉúÈËÊı */
-#define   COURSE_NUM 6                     /* ×î¶àµÄ¿¼ÊÔ¿ÆÄ¿Êı */
+#define   MAX_LEN  10                	   /* å­—ç¬¦ä¸²æœ€å¤§é•¿åº¦ */
+#define   STU_NUM 30                       /* æœ€å¤šçš„å­¦ç”Ÿäººæ•° */
+#define   COURSE_NUM 6                     /* æœ€å¤šçš„è€ƒè¯•ç§‘ç›®æ•° */
 #define   LEN sizeof(struct Student)
 
 typedef struct Student
 {
-	long num;	                    /* Ã¿¸öÑ§ÉúµÄÑ§ºÅ */
-	char name[MAX_LEN];            	/* Ã¿¸öÑ§ÉúµÄĞÕÃû */
-	float score[COURSE_NUM];	    /* Ã¿¸öÑ§ÉúCOURSE_NUMÃÅ¹¦¿ÎµÄ³É¼¨ */
-	float sum;                      /* Ã¿¸öÑ§ÉúµÄ×Ü³É¼¨ */
-	float aver;						/* Ã¿¸öÑ§ÉúµÄÆ½¾ù³É¼¨ */
+	long num;	                    /* æ¯ä¸ªå­¦ç”Ÿçš„å­¦å· */
+	char name[MAX_LEN];            	/* æ¯ä¸ªå­¦ç”Ÿçš„å§“å */
+	float score[COURSE_NUM];	    /* æ¯ä¸ªå­¦ç”ŸCOURSE_NUMé—¨åŠŸè¯¾çš„æˆç»© */
+	float sum;                      /* æ¯ä¸ªå­¦ç”Ÿçš„æ€»æˆç»© */
+	float aver;						/* æ¯ä¸ªå­¦ç”Ÿçš„å¹³å‡æˆç»© */
 	struct Student *next;
 }STU;
 
-
-int   Menu(void);                                      //´´½¨²Ëµ¥
-void  Print(STU *head, int n, int m);                  //´òÓ¡º¯Êı
-void  AverSumofEveryStudent(STU *head, int n, int m);  //¼ÆËãÃ¿ÃÅ¿Î³ÌµÄ×Ü·ÖºÍÆ½¾ù·Ö
-void  AverSumofEveryCourse(STU *head, int n, int m);   //¼ÆËãÃ¿¸öÑ§ÉúµÄ×Ü·ÖºÍÆ½¾ù·Ö
-STU  *SortbyScore(STU *head, int n);				   //°´Ã¿¸öÑ§ÉúµÄ×Ü·ÖÓÉ¸ßµ½µÍÅÅ³öÃû´Î±í
-STU  *Creat(int n, int m);   //´´½¨Á´±í²¢Â¼ÈëĞÅÏ¢
+int   Menu(void);                                      //åˆ›å»ºèœå•
+void  Print(STU *head, int n, int m);                  //æ‰“å°å‡½æ•°
+void  AverSumofEveryStudent(STU *head, int n, int m);  //è®¡ç®—æ¯é—¨è¯¾ç¨‹çš„æ€»åˆ†å’Œå¹³å‡åˆ†
+void  AverSumofEveryCourse(STU *head, int n, int m);   //è®¡ç®—æ¯ä¸ªå­¦ç”Ÿçš„æ€»åˆ†å’Œå¹³å‡åˆ†
+STU  *SortbyScore(STU *head, int n);				   //æŒ‰æ¯ä¸ªå­¦ç”Ÿçš„æ€»åˆ†ç”±é«˜åˆ°ä½æ’å‡ºåæ¬¡è¡¨
+STU  *Creat(int n, int m);   //åˆ›å»ºé“¾è¡¨å¹¶å½•å…¥ä¿¡æ¯
 STU  *Creat1(int n, int m);
-STU  *SortbyScore1(STU *head, int n);                  //°´Ã¿¸öÑ§ÉúµÄ×Ü·ÖÓÉµÍµ½¸ßÅÅ³öÃû´Î±í
-STU  *SortbyNum(STU *head);                            //°´Ñ§ºÅÓÉĞ¡µ½´óÅÅ³ö³É¼¨±í
-STU  *SortbyName(STU *head, int n);                    //°´ĞÕÃûµÄ×ÖµäË³ĞòÅÅ³ö³É¼¨±í
-void  SearchbyNum(STU *head, int n, int m);            //°´Ñ§ºÅ²éÑ¯Ñ§ÉúÅÅÃû¼°Æä¿¼ÊÔ³É¼¨
-void  SearchbyName(STU *head, int n, int m);           //°´ĞÕÃû²éÑ¯Ñ§ÉúÅÅÃû¼°Æä¿¼ÊÔ³É¼¨
-void  StatisticAnalysis(STU *head, int n, int m);      //°´Àà±ğ¼°±ÈÀıÊä³ö
-void  WritetoFile(STU *head, int n, int m);            //½«Ã¿¸öÑ§ÉúµÄ¼ÍÂ¼ĞÅÏ¢Ğ´ÈëÎÄ¼ş
-STU  *ReadfromFile(STU *head, int *n, int *m);         //´ÓÎÄ¼şÖĞ¶Á³öÃ¿¸öÑ§ÉúµÄ¼ÍÂ¼ĞÅÏ¢²¢ÏÔÊ¾
+STU  *SortbyScore1(STU *head, int n);                  //æŒ‰æ¯ä¸ªå­¦ç”Ÿçš„æ€»åˆ†ç”±ä½åˆ°é«˜æ’å‡ºåæ¬¡è¡¨
+STU  *SortbyNum(STU *head);                            //æŒ‰å­¦å·ç”±å°åˆ°å¤§æ’å‡ºæˆç»©è¡¨
+STU  *SortbyName(STU *head, int n);                    //æŒ‰å§“åçš„å­—å…¸é¡ºåºæ’å‡ºæˆç»©è¡¨
+void  SearchbyNum(STU *head, int n, int m);            //æŒ‰å­¦å·æŸ¥è¯¢å­¦ç”Ÿæ’ååŠå…¶è€ƒè¯•æˆç»©
+void  SearchbyName(STU *head, int n, int m);           //æŒ‰å§“åæŸ¥è¯¢å­¦ç”Ÿæ’ååŠå…¶è€ƒè¯•æˆç»©
+void  StatisticAnalysis(STU *head, int n, int m);      //æŒ‰ç±»åˆ«åŠæ¯”ä¾‹è¾“å‡º
+void  WritetoFile(STU *head, int n, int m);            //å°†æ¯ä¸ªå­¦ç”Ÿçš„çºªå½•ä¿¡æ¯å†™å…¥æ–‡ä»¶
+STU  *ReadfromFile(STU *head, int *n, int *m);         //ä»æ–‡ä»¶ä¸­è¯»å‡ºæ¯ä¸ªå­¦ç”Ÿçš„çºªå½•ä¿¡æ¯å¹¶æ˜¾ç¤º
 
 int main()
 {
 	int n, m;
 	int i;
-	STU *head;  //¶¨ÒåÍ·½Úµã
+	STU *head;  //å®šä¹‰å¤´èŠ‚ç‚¹
 	head = (STU *)malloc(LEN);
 	while (1)
 	{
 		i = Menu();
 		if (i == 1)
 		{
-			system("cls");  //ÇåÆÁ
+			system("cls");  //æ¸…å±
 			printf("\t\t\t******************************************************************************\n");
-			printf("\t\t\tInput student number(n<30):\n"); //ÊäÈëÑ§ÉúÊı
+			printf("\t\t\tInput student number(n<30):\n"); //è¾“å…¥å­¦ç”Ÿæ•°
 			printf("\t\t\t");
 			scanf("%d", &n);
 			printf("\t\t\tInput course number(m<=6):\n");
@@ -61,84 +59,84 @@ int main()
 		case 1:
 			printf("\t\t\tInput student's ID, name and score:\n");
 			head = Creat(n, m);
-			system("cls");  //ÇåÆÁ
+			system("cls");  //æ¸…å±
 			break;
 		case 2:
-			system("cls");  //ÇåÆÁ
+			system("cls");  //æ¸…å±
 			AverSumofEveryStudent(head, n, m);
 			break;
 		case 3:
-			system("cls");  //ÇåÆÁ
+			system("cls");  //æ¸…å±
 			AverSumofEveryCourse(head, n, m);
 			break;
 		case 4:
-			system("cls");  //ÇåÆÁ
+			system("cls");  //æ¸…å±
 			printf("\n\n\n");
 			printf("\t\t\tSort in ascending order by score:\n");
 			head = SortbyScore(head, n);
 			Print(head, n, m);
 			break;
 		case 5:
-			system("cls");  //ÇåÆÁ
+			system("cls");  //æ¸…å±
 			printf("\n\n\n");
 			printf("\t\t\tSort in ascending order by score:\n");
 			head = SortbyScore1(head, n);
 			Print(head, n, m);
 			break;
 		case 6:
-			system("cls");  //ÇåÆÁ
+			system("cls");  //æ¸…å±
 			printf("\n\n\n");
 			printf("\t\t\tSort in ascending order by number:\n");
 			head = SortbyNum(head);
 			Print(head, n, m);
 			break;
 		case 7:
-			system("cls");  //ÇåÆÁ
+			system("cls");  //æ¸…å±
 			printf("\n\n\n");
 			printf("\t\t\tSort in dictionary order by name:\n");
 			head = SortbyName(head, n);
 			Print(head, n, m);
 			break;
 		case 8:
-			system("cls");  //ÇåÆÁ
+			system("cls");  //æ¸…å±
 			printf("\n\n\n");
 			printf("\t\t\t******************************************************************************\n");
 			printf("\t\t\tInput the number you want to search:\n");
 			SearchbyNum(head, n, m);
 			break;
 		case 9:
-			system("cls");  //ÇåÆÁ
+			system("cls");  //æ¸…å±
 			printf("\n\n\n");
 			printf("\t\t\t******************************************************************************\n");
 			printf("\t\t\tInput the name you want to search:\n");
 			SearchbyName(head, n, m);
 			break;
 		case 10:
-			system("cls");  //ÇåÆÁ
+			system("cls");  //æ¸…å±
 			StatisticAnalysis(head, n, m);
 			break;
 		case 11:
-			system("cls");  //ÇåÆÁ
+			system("cls");  //æ¸…å±
 			printf("\n\n\n");
 			Print(head, n, m);
 			break;
 		case 12:
-			system("cls");  //ÇåÆÁ
+			system("cls");  //æ¸…å±
 			WritetoFile(head, n, m);
 			break;
 		case 13:
-			system("cls");  //ÇåÆÁ
+			system("cls");  //æ¸…å±
 			head = ReadfromFile(head, &n, &m);
 			break;
 		case 0:
-			system("cls");  //ÇåÆÁ
+			system("cls");  //æ¸…å±
 			printf("\n\n\n");
 			printf("\t\t\t******************************************************************************\n");
 			printf("\t\t\tEnd of program!\n");
 			printf("\t\t\t******************************************************************************\n");
 			return 0;
 		default:
-			system("cls");  //ÇåÆÁ
+			system("cls");  //æ¸…å±
 			printf("\n\n\n");
 			printf("\t\t\t******************************************************************************\n");
 			printf("\t\t\tInput error!\n");
@@ -152,41 +150,40 @@ int main()
 
 
 }
-// ´´½¨²Ëµ¥
+// åˆ›å»ºèœå•
 int   Menu(void)
 {
 	int i;
-	system("title Ñ§Éú³É¼¨¹ÜÀíÏµÍ³V7.0  By wyxiang");
-	printf("\n\n");
-	printf("\t\t\t                         Ñ§Éú³É¼¨¹ÜÀíÏµÍ³V7.0\n");
-	printf("\t\t\t******************************************************************************\n");
-	printf("\t\t\t*                Management for Students' scores                             *\n");
-	printf("\t\t\t*                1.  Input record                                            *\n");
-	printf("\t\t\t*                2.  Caculate total and average score of every course        *\n");
-	printf("\t\t\t*                3.  Caculate total and average score of every student       *\n");
-	printf("\t\t\t*                4.  Sort in descending order by score                       *\n");
-	printf("\t\t\t*                5.  Sort in ascending order by score                        *\n");
-	printf("\t\t\t*                6.  Sort in ascending order by number                       *\n");
-	printf("\t\t\t*                7.  Sort in dictionary order by name                        *\n");
-	printf("\t\t\t*                8.  Search by number                                        *\n");
-	printf("\t\t\t*                9.  Search by name                                          *\n");
-	printf("\t\t\t*                10. Statistic analysis                                      *\n");
-	printf("\t\t\t*                11. List record                                             *\n");
-	printf("\t\t\t*                12. Write to a file                                         *\n");
-	printf("\t\t\t*                13. Read from a file                                        *\n");
-	printf("\t\t\t*                0.  Exit                                                    *\n");
-	printf("\t\t\t******************************************************************************\n");
-	printf("\n");
-	printf("\n");
-	printf("\n");
-	printf("\n");
-	printf("\t\t\t*****************Please Input your choice:");
+	system("title å­¦ç”Ÿæˆç»©ç®¡ç†ç³»ç»ŸV7.0  By wyxiang");
+	printf( "\n\n"
+            "\t\t\t                         å­¦ç”Ÿæˆç»©ç®¡ç†ç³»ç»ŸV7.0\n"
+            "\t\t\t******************************************************************************\n"
+            "\t\t\t*                Management for Students' scores                             *\n"
+            "\t\t\t*                1.  Input record                                            *\n"
+            "\t\t\t*                2.  Caculate total and average score of every course        *\n"
+            "\t\t\t*                3.  Caculate total and average score of every student       *\n"
+            "\t\t\t*                4.  Sort in descending order by score                       *\n"
+            "\t\t\t*                5.  Sort in ascending order by score                        *\n"
+            "\t\t\t*                6.  Sort in ascending order by number                       *\n"
+            "\t\t\t*                7.  Sort in dictionary order by name                        *\n"
+            "\t\t\t*                8.  Search by number                                        *\n"
+            "\t\t\t*                9.  Search by name                                          *\n"
+            "\t\t\t*                10. Statistic analysis                                      *\n"
+            "\t\t\t*                11. List record                                             *\n"
+            "\t\t\t*                12. Write to a file                                         *\n"
+            "\t\t\t*                13. Read from a file                                        *\n"
+            "\t\t\t*                0.  Exit                                                    *\n"
+            "\t\t\t******************************************************************************\n"
+            "\n"
+            "\n"
+            "\n"
+            "\n"
+            "\t\t\t*****************Please Input your choice:"); // åªéœ€è°ƒç”¨ä¸€æ¬¡ printf()ï¼Œé€Ÿåº¦æ›´å¿«
 	scanf("%d", &i);
 	return i;
-
 }
 
-// ´´½¨Á´±í
+// åˆ›å»ºé“¾è¡¨
 STU *Creat(int n, int m) {
 	STU *head;
 	STU *p1, *p2;
@@ -293,19 +290,19 @@ void  AverSumofEveryCourse(STU *head, int n, int m)
 
 STU  *SortbyScore(STU *head, int n)
 {
-	STU *endpt;    //¿ØÖÆÑ­»·±È½Ï
-	STU *p;        //ÁÙÊ±Ö¸Õë±äÁ¿
+	STU *endpt;    //æ§åˆ¶å¾ªç¯æ¯”è¾ƒ
+	STU *p;        //ä¸´æ—¶æŒ‡é’ˆå˜é‡
 	STU *p1, *p2;
 
 	p1 = (STU *)malloc(LEN);
-	p1->next = head;        //×¢ÒâÀí½â£ºÎÒÃÇÔö¼ÓÒ»¸ö½Úµã£¬·ÅÔÚµÚÒ»¸ö½ÚµãµÄÇ°Ãæ£¬Ö÷ÒªÊÇÎªÁË±ãÓÚ±È½Ï¡£ÒòÎªµÚÒ»¸ö½ÚµãÃ»ÓĞÇ°Çı£¬ÎÒÃÇ²»ÄÜ½»»»µØÖ·
-	head = p1;                 //ÈÃheadÖ¸Ïòp1½Úµã£¬ÅÅĞòÍê³Éºó£¬ÎÒÃÇÔÙ°Ñp1½ÚµãÊÍ·Åµô
+	p1->next = head;        //æ³¨æ„ç†è§£ï¼šæˆ‘ä»¬å¢åŠ ä¸€ä¸ªèŠ‚ç‚¹ï¼Œæ”¾åœ¨ç¬¬ä¸€ä¸ªèŠ‚ç‚¹çš„å‰é¢ï¼Œä¸»è¦æ˜¯ä¸ºäº†ä¾¿äºæ¯”è¾ƒã€‚å› ä¸ºç¬¬ä¸€ä¸ªèŠ‚ç‚¹æ²¡æœ‰å‰é©±ï¼Œæˆ‘ä»¬ä¸èƒ½äº¤æ¢åœ°å€
+	head = p1;                 //è®©headæŒ‡å‘p1èŠ‚ç‚¹ï¼Œæ’åºå®Œæˆåï¼Œæˆ‘ä»¬å†æŠŠp1èŠ‚ç‚¹é‡Šæ”¾æ‰
 
 	for (endpt = NULL; endpt != head; endpt = p)
 	{
 		for (p = p1 = head; p1->next->next != endpt; p1 = p1->next)
 		{
-			if (p1->next->sum < p1->next->next->sum)  //Èç¹ûÇ°ÃæµÄ½Úµã¼üÖµ±ÈºóÃæ½ÚµãµÄ¼üÖµ´ó£¬Ôò½»»»
+			if (p1->next->sum < p1->next->next->sum)  //å¦‚æœå‰é¢çš„èŠ‚ç‚¹é”®å€¼æ¯”åé¢èŠ‚ç‚¹çš„é”®å€¼å¤§ï¼Œåˆ™äº¤æ¢
 			{
 				p2 = p1->next->next;
 				p1->next->next = p2->next;
@@ -316,29 +313,29 @@ STU  *SortbyScore(STU *head, int n)
 		}
 	}
 
-	p1 = head;              //°Ñp1µÄĞÅÏ¢È¥µô
-	head = head->next;       //ÈÃheadÖ¸ÏòÅÅĞòºóµÄµÚÒ»¸ö½Úµã
-	free(p1);          //ÊÍ·Åp1
-	p1 = NULL;          //p1ÖÃÎªNULL£¬±£Ö¤²»²úÉú¡°Ò°Ö¸Õë¡±£¬¼´µØÖ·²»È·¶¨µÄÖ¸Õë±äÁ¿
+	p1 = head;              //æŠŠp1çš„ä¿¡æ¯å»æ‰
+	head = head->next;       //è®©headæŒ‡å‘æ’åºåçš„ç¬¬ä¸€ä¸ªèŠ‚ç‚¹
+	free(p1);          //é‡Šæ”¾p1
+	p1 = NULL;          //p1ç½®ä¸ºNULLï¼Œä¿è¯ä¸äº§ç”Ÿâ€œé‡æŒ‡é’ˆâ€ï¼Œå³åœ°å€ä¸ç¡®å®šçš„æŒ‡é’ˆå˜é‡
 
 	return head;
 }
 
 STU  *SortbyScore1(STU *head, int n)
 {
-	STU *endpt;    //¿ØÖÆÑ­»·±È½Ï
-	STU *p;        //ÁÙÊ±Ö¸Õë±äÁ¿
+	STU *endpt;    //æ§åˆ¶å¾ªç¯æ¯”è¾ƒ
+	STU *p;        //ä¸´æ—¶æŒ‡é’ˆå˜é‡
 	STU *p1, *p2;
 
 	p1 = (STU *)malloc(LEN);
-	p1->next = head;        //×¢ÒâÀí½â£ºÎÒÃÇÔö¼ÓÒ»¸ö½Úµã£¬·ÅÔÚµÚÒ»¸ö½ÚµãµÄÇ°Ãæ£¬Ö÷ÒªÊÇÎªÁË±ãÓÚ±È½Ï¡£ÒòÎªµÚÒ»¸ö½ÚµãÃ»ÓĞÇ°Çı£¬ÎÒÃÇ²»ÄÜ½»»»µØÖ·
-	head = p1;                 //ÈÃheadÖ¸Ïòp1½Úµã£¬ÅÅĞòÍê³Éºó£¬ÎÒÃÇÔÙ°Ñp1½ÚµãÊÍ·Åµô
+	p1->next = head;        //æ³¨æ„ç†è§£ï¼šæˆ‘ä»¬å¢åŠ ä¸€ä¸ªèŠ‚ç‚¹ï¼Œæ”¾åœ¨ç¬¬ä¸€ä¸ªèŠ‚ç‚¹çš„å‰é¢ï¼Œä¸»è¦æ˜¯ä¸ºäº†ä¾¿äºæ¯”è¾ƒã€‚å› ä¸ºç¬¬ä¸€ä¸ªèŠ‚ç‚¹æ²¡æœ‰å‰é©±ï¼Œæˆ‘ä»¬ä¸èƒ½äº¤æ¢åœ°å€
+	head = p1;                 //è®©headæŒ‡å‘p1èŠ‚ç‚¹ï¼Œæ’åºå®Œæˆåï¼Œæˆ‘ä»¬å†æŠŠp1èŠ‚ç‚¹é‡Šæ”¾æ‰
 
 	for (endpt = NULL; endpt != head; endpt = p)
 	{
 		for (p = p1 = head; p1->next->next != endpt; p1 = p1->next)
 		{
-			if (p1->next->sum > p1->next->next->sum)  //Èç¹ûÇ°ÃæµÄ½Úµã¼üÖµ±ÈºóÃæ½ÚµãµÄ¼üÖµ´ó£¬Ôò½»»»
+			if (p1->next->sum > p1->next->next->sum)  //å¦‚æœå‰é¢çš„èŠ‚ç‚¹é”®å€¼æ¯”åé¢èŠ‚ç‚¹çš„é”®å€¼å¤§ï¼Œåˆ™äº¤æ¢
 			{
 				p2 = p1->next->next;
 				p1->next->next = p2->next;
@@ -349,39 +346,39 @@ STU  *SortbyScore1(STU *head, int n)
 		}
 	}
 
-	p1 = head;              //°Ñp1µÄĞÅÏ¢È¥µô
-	head = head->next;       //ÈÃheadÖ¸ÏòÅÅĞòºóµÄµÚÒ»¸ö½Úµã
-	free(p1);          //ÊÍ·Åp1
-	p1 = NULL;          //p1ÖÃÎªNULL£¬±£Ö¤²»²úÉú¡°Ò°Ö¸Õë¡±£¬¼´µØÖ·²»È·¶¨µÄÖ¸Õë±äÁ¿
+	p1 = head;              //æŠŠp1çš„ä¿¡æ¯å»æ‰
+	head = head->next;       //è®©headæŒ‡å‘æ’åºåçš„ç¬¬ä¸€ä¸ªèŠ‚ç‚¹
+	free(p1);          //é‡Šæ”¾p1
+	p1 = NULL;          //p1ç½®ä¸ºNULLï¼Œä¿è¯ä¸äº§ç”Ÿâ€œé‡æŒ‡é’ˆâ€ï¼Œå³åœ°å€ä¸ç¡®å®šçš„æŒ‡é’ˆå˜é‡
 
 	return head;
 }
 
 STU *SortbyNum(STU *head)
 {
-	STU *first;    //ÎªÔ­Á´±íÊ£ÏÂÓÃÓÚÖ±½Ó²åÈëÅÅĞòµÄ½ÚµãÍ·Ö¸Õë
-	STU *t;        //ÁÙÊ±Ö¸Õë±äÁ¿£º²åÈë½Úµã
-	STU *p, *q;     //ÁÙÊ±Ö¸Õë±äÁ¿
+	STU *first;    //ä¸ºåŸé“¾è¡¨å‰©ä¸‹ç”¨äºç›´æ¥æ’å…¥æ’åºçš„èŠ‚ç‚¹å¤´æŒ‡é’ˆ
+	STU *t;        //ä¸´æ—¶æŒ‡é’ˆå˜é‡ï¼šæ’å…¥èŠ‚ç‚¹
+	STU *p, *q;     //ä¸´æ—¶æŒ‡é’ˆå˜é‡
 
-	first = head->next;      //Ô­Á´±íÊ£ÏÂÓÃÓÚÖ±½Ó²åÈëÅÅĞòµÄ½ÚµãÁ´±í£º¿É¸ù¾İÍ¼12À´Àí½â
-	head->next = NULL;       //Ö»º¬ÓĞÒ»¸ö½ÚµãµÄÁ´±íµÄÓĞĞòÁ´±í£º¿É¸ù¾İÍ¼11À´Àí½â
+	first = head->next;      //åŸé“¾è¡¨å‰©ä¸‹ç”¨äºç›´æ¥æ’å…¥æ’åºçš„èŠ‚ç‚¹é“¾è¡¨ï¼šå¯æ ¹æ®å›¾12æ¥ç†è§£
+	head->next = NULL;       //åªå«æœ‰ä¸€ä¸ªèŠ‚ç‚¹çš„é“¾è¡¨çš„æœ‰åºé“¾è¡¨ï¼šå¯æ ¹æ®å›¾11æ¥ç†è§£
 
-	while (first != NULL)        //±éÀúÊ£ÏÂÎŞĞòµÄÁ´±í
+	while (first != NULL)        //éå†å‰©ä¸‹æ— åºçš„é“¾è¡¨
 	{
-		//×¢Òâ£ºÕâÀïforÓï¾ä¾ÍÊÇÌåÏÖÖ±½Ó²åÈëÅÅĞòË¼ÏëµÄµØ·½
-		for (t = first, q = head; ((q != NULL) && (q->num < t->num)); p = q, q = q->next);  //ÎŞĞò½ÚµãÔÚÓĞĞòÁ´±íÖĞÕÒ²åÈëµÄÎ»ÖÃ
+		//æ³¨æ„ï¼šè¿™é‡Œforè¯­å¥å°±æ˜¯ä½“ç°ç›´æ¥æ’å…¥æ’åºæ€æƒ³çš„åœ°æ–¹
+		for (t = first, q = head; ((q != NULL) && (q->num < t->num)); p = q, q = q->next);  //æ— åºèŠ‚ç‚¹åœ¨æœ‰åºé“¾è¡¨ä¸­æ‰¾æ’å…¥çš„ä½ç½®
 
-		first = first->next; //ÎŞĞòÁ´±íÖĞµÄ½ÚµãÀë¿ª£¬ÒÔ±ãËü²åÈëµ½ÓĞĞòÁ´±íÖĞ
+		first = first->next; //æ— åºé“¾è¡¨ä¸­çš„èŠ‚ç‚¹ç¦»å¼€ï¼Œä»¥ä¾¿å®ƒæ’å…¥åˆ°æœ‰åºé“¾è¡¨ä¸­
 
-		if (q == head)      //²åÔÚµÚÒ»¸ö½ÚµãÖ®Ç°
+		if (q == head)      //æ’åœ¨ç¬¬ä¸€ä¸ªèŠ‚ç‚¹ä¹‹å‰
 		{
 			head = t;
 		}
-		else            //pÊÇqµÄÇ°Çı
+		else            //pæ˜¯qçš„å‰é©±
 		{
 			p->next = t;
 		}
-		t->next = q;     //Íê³É²åÈë¶¯×÷
+		t->next = q;     //å®Œæˆæ’å…¥åŠ¨ä½œ
 						 //first = first->next;
 	}
 	return head;
@@ -389,33 +386,33 @@ STU *SortbyNum(STU *head)
 
 STU  *SortbyName(STU *head, int n)
 {
-	STU *endpt;    //¿ØÖÆÑ­»·±È½Ï
-	STU *p;        //ÁÙÊ±Ö¸Õë±äÁ¿
+	STU *endpt;    //æ§åˆ¶å¾ªç¯æ¯”è¾ƒ
+	STU *p;        //ä¸´æ—¶æŒ‡é’ˆå˜é‡
 	STU *p1, *p2;
 
 	p1 = (STU *)malloc(LEN);
-	p1->next = head;        //×¢ÒâÀí½â£ºÎÒÃÇÔö¼ÓÒ»¸ö½Úµã£¬·ÅÔÚµÚÒ»¸ö½ÚµãµÄÇ°Ãæ£¬Ö÷ÒªÊÇÎªÁË±ãÓÚ±È½Ï¡£ÒòÎªµÚÒ»¸ö½ÚµãÃ»ÓĞÇ°Çı£¬ÎÒÃÇ²»ÄÜ½»»»µØÖ·
-	head = p1;                 //ÈÃheadÖ¸Ïòp1½Úµã£¬ÅÅĞòÍê³Éºó£¬ÎÒÃÇÔÙ°Ñp1½ÚµãÊÍ·Åµô
+	p1->next = head;        //æ³¨æ„ç†è§£ï¼šæˆ‘ä»¬å¢åŠ ä¸€ä¸ªèŠ‚ç‚¹ï¼Œæ”¾åœ¨ç¬¬ä¸€ä¸ªèŠ‚ç‚¹çš„å‰é¢ï¼Œä¸»è¦æ˜¯ä¸ºäº†ä¾¿äºæ¯”è¾ƒã€‚å› ä¸ºç¬¬ä¸€ä¸ªèŠ‚ç‚¹æ²¡æœ‰å‰é©±ï¼Œæˆ‘ä»¬ä¸èƒ½äº¤æ¢åœ°å€
+	head = p1;                 //è®©headæŒ‡å‘p1èŠ‚ç‚¹ï¼Œæ’åºå®Œæˆåï¼Œæˆ‘ä»¬å†æŠŠp1èŠ‚ç‚¹é‡Šæ”¾æ‰
 
 	for (endpt = NULL; endpt != head; endpt = p)
 	{
 		for (p = p1 = head; p1->next->next != endpt; p1 = p1->next)
 		{
-			if (strcmp(p1->next->name, p1->next->next->name)>0)  //Èç¹ûÇ°ÃæµÄ½Úµã¼üÖµ±ÈºóÃæ½ÚµãµÄ¼üÖµ´ó£¬Ôò½»»»
+			if (strcmp(p1->next->name, p1->next->next->name)>0)  //å¦‚æœå‰é¢çš„èŠ‚ç‚¹é”®å€¼æ¯”åé¢èŠ‚ç‚¹çš„é”®å€¼å¤§ï¼Œåˆ™äº¤æ¢
 			{
 				p2 = p1->next->next;
 				p1->next->next = p2->next;
 				p2->next = p1->next;
-				p1->next = p2;     //½áºÏµÚ4µãÀí½â
-				p = p1->next->next;   //½áºÏµÚ6µãÀí½â
+				p1->next = p2;     //ç»“åˆç¬¬4ç‚¹ç†è§£
+				p = p1->next->next;   //ç»“åˆç¬¬6ç‚¹ç†è§£
 			}
 		}
 	}
 
-	p1 = head;              //°Ñp1µÄĞÅÏ¢È¥µô
-	head = head->next;       //ÈÃheadÖ¸ÏòÅÅĞòºóµÄµÚÒ»¸ö½Úµã
-	free(p1);          //ÊÍ·Åp1
-	p1 = NULL;          //p1ÖÃÎªNULL£¬±£Ö¤²»²úÉú¡°Ò°Ö¸Õë¡±£¬¼´µØÖ·²»È·¶¨µÄÖ¸Õë±äÁ¿
+	p1 = head;              //æŠŠp1çš„ä¿¡æ¯å»æ‰
+	head = head->next;       //è®©headæŒ‡å‘æ’åºåçš„ç¬¬ä¸€ä¸ªèŠ‚ç‚¹
+	free(p1);          //é‡Šæ”¾p1
+	p1 = NULL;          //p1ç½®ä¸ºNULLï¼Œä¿è¯ä¸äº§ç”Ÿâ€œé‡æŒ‡é’ˆâ€ï¼Œå³åœ°å€ä¸ç¡®å®šçš„æŒ‡é’ˆå˜é‡
 
 	return head;
 }
@@ -427,7 +424,7 @@ void Print(STU *head, int n, int m)
 	int i;
 	p = head;
 
-	if (head != NULL)        //Ö»Òª²»ÊÇ¿ÕÁ´±í£¬¾ÍÊä³öÁ´±íÖĞËùÓĞ½Úµã
+	if (head != NULL)        //åªè¦ä¸æ˜¯ç©ºé“¾è¡¨ï¼Œå°±è¾“å‡ºé“¾è¡¨ä¸­æ‰€æœ‰èŠ‚ç‚¹
 	{
 		printf("\t\t\t******************************************************************************\n");
 		do
@@ -439,7 +436,7 @@ void Print(STU *head, int n, int m)
 				printf("%.0f\t", p->score[i]);
 			}
 			printf("%.0f\t%.0f\n", p->sum, p->sum / m);
-			p = p->next;     //ÒÆµ½ÏÂÒ»¸ö½Úµã
+			p = p->next;     //ç§»åˆ°ä¸‹ä¸€ä¸ªèŠ‚ç‚¹
 		} while (p != NULL);
 		printf("\t\t\t******************************************************************************\n");
 	}
@@ -526,8 +523,8 @@ void  StatisticAnalysis(STU *head, int n, int m)
 	int i, j;
 	for (i = 0; i<m; i++)
 	{
-		p = head; // ²»ÒªÍüÁË³õÊ¼»¯£¬²»È»»áÕ¨
-		for (j = 0; j<6; j++)  // ³õÊ¼»¯
+		p = head; // ä¸è¦å¿˜äº†åˆå§‹åŒ–ï¼Œä¸ç„¶ä¼šç‚¸
+		for (j = 0; j<6; j++)  // åˆå§‹åŒ–
 		{
 			a[j] = 0;
 		}
@@ -605,50 +602,7 @@ void  WritetoFile(STU *head, int n, int m)
 
 }
 
-/*
-void  ReadfromFile(STU1 stu[], int *n, int *m)
-{
-FILE *fp;
-int i, j;
-printf("\n\n\n");
-printf("\t\t\t******************************************************************************\n");
-if ((fp = fopen("student.txt", "r")) == NULL)
-{
-printf("\t\t\tFail to open student.txt\n");
-return;
-}
-fscanf(fp, "%d\t%d\n", n, m);
-for (i = 0; i<*n; i++)
-{
-fscanf(fp, "%12ld", &stu[i].num);
-fscanf(fp, "%12s", stu[i].name);
-for (j = 0; j<*m; j++)
-{
-fscanf(fp, "%12f", &stu[i].score[j]);
-}
-fscanf(fp, "%12f%12f", &stu[i].sum, &stu[i].aver);
-
-}
-printf("\t\t\tImport Successfully!\n");
-fclose(fp);
-
-
-for (i = 0; i < *n; i++)
-{
-printf("\t\t\t%ld\t%s\t", stu[i].num, stu[i].name);
-for (j = 0; j<*m; j++)
-{
-printf("%.0f\t", stu[i].score[j]);
-}
-printf("%.0f\t%.0f\n", stu[i].sum, stu[i].aver);
-}
-
-printf("\t\t\t******************************************************************************\n");
-
-}
-*/
-
-//ÕâÀïÓÃÁËÖ±½ÓÉú³ÉÁËÒ»¸öĞÂµÄÁ´±í£¬È·±£¿ÉÒÔÖ±½Ó¶ÁÈ¡´æºÃµÄÊı¾İ
+//è¿™é‡Œç”¨äº†ç›´æ¥ç”Ÿæˆäº†ä¸€ä¸ªæ–°çš„é“¾è¡¨ï¼Œç¡®ä¿å¯ä»¥ç›´æ¥è¯»å–å­˜å¥½çš„æ•°æ®
 STU *ReadfromFile(STU *head, int *n, int *m)
 {
 	STU *p;
@@ -660,7 +614,7 @@ STU *ReadfromFile(STU *head, int *n, int *m)
 		return NULL;
 	}
 	fscanf(fp, "%d\t%d\n", n, m);
-	head = Creat1(*n, *m);  //´´½¨ÁËÒ»¸ö¿ÕÁ´±í£¬²¢ÇÒ¸³¸øhead
+	head = Creat1(*n, *m);  //åˆ›å»ºäº†ä¸€ä¸ªç©ºé“¾è¡¨ï¼Œå¹¶ä¸”èµ‹ç»™head
 	p = head;
 	for (i = 0; i<*n; i++)
 	{
@@ -684,7 +638,3 @@ STU *ReadfromFile(STU *head, int *n, int *m)
 
 	return head;
 }
-
-
-
-
